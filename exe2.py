@@ -57,40 +57,54 @@ from torch import optim
 # PyTorchの最適化アルゴリズムモジュール（optim）をインポートします。
 # 交差エントロピー誤差関数
 loss_fnc = nn.CrossEntropyLoss()
+# 交差エントロピー誤差関数を定義します。この誤差関数は分類問題においてよく使われます。
+
 
 # 最適化アルゴリズム
 optimizer = optim.SGD(net.parameters(), lr=0.01)
+# 確率的勾配降下法（SGD）を最適化アルゴリズムとして定義します。lr=0.01は学習率です。
+
 
 # 損失のログ
 record_loss_train = []
 record_loss_test = []
-# 交差エントロピー誤差関数とSGD（確率的勾配降下法）を使用します。
+# 訓練データとテストデータの損失を記録するためのリストを初期化します。
 
 
 # 1000エポック学習
 for i in range(1000):
+    # 1000エポックの学習ループを開始します。
 
-    # 勾配を0に
+    # 勾配を0にリセットします。これはパラメータの更新を行う前に行う必要があります。
     optimizer.zero_grad()
     
     # 順伝播
     y_train = net(x_train)
     y_test = net(x_test)
+    # 訓練データとテストデータをニューラルネットワークに入力し、出力（予測値）を計算します。
     
     # 誤差を求める
     loss_train = loss_fnc(y_train, t_train)
     loss_test = loss_fnc(y_test, t_test)
+
+
     record_loss_train.append(loss_train.item())
     record_loss_test.append(loss_test.item())
+    # 訓練データとテストデータの損失をリストに記録します。
 
     # 逆伝播（勾配を求める）
     loss_train.backward()
+    # 訓練データの損失に対して逆伝播を行い、勾配を計算します。
+
     
     # パラメータの更新
     optimizer.step()
+    # 最適化アルゴリズムを使ってパラメータを更新します。
 
     if i%100 == 0:
         print("Epoch:", i, "Loss_Train:", loss_train.item(), "Loss_Test:", loss_test.item())
+        # 100エポックごとに訓練データとテストデータの損失を表示します。
+
 
 #  1000エポックにわたり、モデルを訓練し、損失を記録します。
 
@@ -98,10 +112,13 @@ for i in range(1000):
 
 # 誤差の推移
 import matplotlib.pyplot as plt
+# グラフ描画ライブラリMatplotlibをインポートします。
 
 plt.plot(range(len(record_loss_train)), record_loss_train, label="Train")
 plt.plot(range(len(record_loss_test)), record_loss_test, label="Test")
 plt.legend()
+# 訓練データとテストデータの損失の推移をプロットし、凡例を追加します。
+
 
 plt.xlabel("Epochs")
 plt.ylabel("Error")
@@ -114,5 +131,4 @@ plt.show()
 y_test = net(x_test)
 count = (y_test.argmax(1) == t_test).sum().item()
 print("正解率:", str(count/len(y_test)*100) + "%")
-
 # テストデータに対するモデルの正解率を計算します。
