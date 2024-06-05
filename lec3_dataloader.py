@@ -1,8 +1,15 @@
 # データの読み込み
 import torch
 from torchvision.datasets import MNIST
+# MNIST: torchvision.datasetsのMNISTクラス、手書き数字の画像データセット。
 from torchvision import transforms
+# transforms: データ変換（ここではテンソルに変換）を行うためのモジュール。
 from torch.utils.data import DataLoader
+# DataLoader: データセットからバッチを作成し、データを効率的に読み込むためのユーティリティ。
+
+
+
+
 
 # 訓練データを取得
 mnist_train = MNIST("./data", 
@@ -12,6 +19,11 @@ mnist_train = MNIST("./data",
 mnist_test = MNIST("./data",
                    train=False, download=True,
                    transform=transforms.ToTensor())
+# train=True: 訓練データを取得。
+# download=True: データが存在しない場合はダウンロード。
+# transform=transforms.ToTensor(): データをテンソル形式に変換。
+
+
 print("訓練データの数:", len(mnist_train), "テストデータの数:", len(mnist_test))
 
 # DataLoaderの設定
@@ -20,9 +32,16 @@ batch_size = 256
 train_loader = DataLoader(mnist_train, 
                           batch_size=batch_size,
                           shuffle=True)
+# train_loader = DataLoader(mnist_train, batch_size=batch_size, shuffle=True): 訓練データローダーを作成。
+# batch_size=batch_size: バッチサイズを設定。
+# shuffle=True: データをランダムにシャッフル。
+
 test_loader = DataLoader(mnist_test,
                          batch_size=batch_size,
                          shuffle=False)
+# test_loader = DataLoader(mnist_test, batch_size=batch_size, shuffle=False): テストデータローダーを作成。
+# batch_size=batch_size: バッチサイズを設定。
+# shuffle=False: データをシャッフルしない（順序通りに読み込む）。
 
 
 # モデルの構築
